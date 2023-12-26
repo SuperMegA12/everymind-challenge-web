@@ -5,19 +5,30 @@ v-container
       v-row
         v-col
           v-text-field(v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details)
+        v-col(cols="2")
+          v-btn(color="primary" @click="openCreateProductModal") Create Product
     template(v-slot:item.actions="{ item }")
       v-icon(v-on:click="deleteProduct(item.id)") mdi-delete
+
+  v-dialog(v-model="isCreateProductModalOpen")
+    create-product-form(@product-created="closeCreateProductModal")
 </template>
 
 <script>
+import CreateProductForm from './CreateProductForm'
+
 import axios from 'axios';
 
 export default {
-  name: 'ProductTable',
+
+  components: {
+    CreateProductForm
+  },
 
   data: () => ({
     products: [],
     search: '',
+    isCreateProductModalOpen: false,
     headers: [
       { text: 'ID', value: 'id' },
       { text: 'Name', value: 'name' },
@@ -55,6 +66,10 @@ export default {
         .catch(error => {
           console.error('Error deleting product:', error);
         });
+    },
+
+    openCreateProductModal() {
+      this.isCreateProductModalOpen = true;
     },
   },
 };

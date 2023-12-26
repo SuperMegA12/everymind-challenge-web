@@ -1,7 +1,7 @@
 <template lang="pug">
 v-app
   v-main
-    ProductTable
+    product-table
 </template>
 
 <script>
@@ -9,11 +9,7 @@ import ProductTable from './components/product/ProductTable'
 
 export default {
   components: {
-    ProductTable
+    ProductTable,
   },
-
-  data: () => ({
-    //
-  }),
 };
 </script>
