@@ -11,12 +11,14 @@ v-container
     v-btn(color="primary" @click="openCreateProductModal") Create Product
 
   v-dialog(v-model="isCreateProductModalOpen")
-    create-product-form(@product-created="closeCreateProductModal")
+    create-product-form(@product-created="fetchProducts")
+
+  v-snackbar(v-model="snackbar.show" :color="snackbar.color" :timeout="snackbar.timeout" bottom)
+    span {{ snackbar.text }}
 </template>
 
 <script>
 import CreateProductForm from './CreateProductForm'
-
 import axios from 'axios';
 
 export default {
@@ -29,6 +31,12 @@ export default {
     products: [],
     search: '',
     isCreateProductModalOpen: false,
+    snackbar: {
+      show: false,
+      text: '',
+      color: '',
+      timeout: 6000,
+    },
     headers: [
       { text: 'ID', value: 'id' },
       { text: 'Name', value: 'name' },
@@ -50,8 +58,11 @@ export default {
           this.products = response.data;
         })
         .catch(error => {
+          this.showSnackbar('Error fetching products ' + error, 'error')
           console.error('Error fetching products:', error);
         });
+
+      this.closeCreateProductModal();
     },
 
     deleteProduct(productId) {
@@ -61,9 +72,11 @@ export default {
       axios.delete(`http://localhost:8080/products/delete/${productId}`)
         .then(response => {
           this.products = this.products.filter(product => product.id !== productId);
-          console.log('Product deleted successfully:', response.data);
+          this.showSnackbar(response.data, 'primary');
+          console.log(response.data);
         })
         .catch(error => {
+          this.showSnackbar('Error deleting product', 'error');
           console.error('Error deleting product:', error);
         });
     },
@@ -74,6 +87,16 @@ export default {
 
     closeCreateProductModal() {
       this.isCreateProductModalOpen = false;
+    },
+
+    showSnackbar(text, color) {
+      this.snackbar.text = text;
+      this.snackbar.color = color;
+      this.snackbar.show = true;
+
+      setTimeout(() => {
+        this.snackbar.show = false;
+      }, this.snackbar.timeout);
     },
   },
 };
