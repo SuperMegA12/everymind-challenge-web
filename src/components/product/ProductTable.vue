@@ -71,6 +71,10 @@ export default {
     openCreateProductModal() {
       this.isCreateProductModalOpen = true;
     },
+
+    closeCreateProductModal() {
+      this.isCreateProductModalOpen = false;
+    },
   },
 };
 </script>
