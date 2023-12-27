@@ -1,6 +1,6 @@
 <template lang="pug">
 v-container
-  v-form(ref="form" v-model="valid" lazy-validation)
+  v-form(ref="form" v-model="valid")
     v-row
       v-col(cols="12" sm="6" md="4")
         v-text-field(v-model="name" label="Name" :rules="[v => !!v || 'Name is required']")
@@ -38,12 +38,21 @@ export default {
       axios.post('http://localhost:8080/products/create', newProduct)
         .then(response => {
           this.$emit('product-created');
+          this.cleanFields();
           console.log('Product created successfully:', response.data);
-          this.$refs.form.reset();
         })
         .catch(error => {
+          this.cleanFields();
           console.error('Error creating product:', error);
         });
+    },
+
+    cleanFields() {
+      this.name = '';
+      this.description = '';
+      this.code = '';
+      this.price = null;
+      this.valid = false;
     },
   },
 };
