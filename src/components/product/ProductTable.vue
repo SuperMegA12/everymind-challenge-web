@@ -4,7 +4,7 @@ v-container
     template(v-slot:top)
       v-row
         v-col
-          v-text-field(v-model="search" @input="updateFilteredProducts" append-icon="mdi-magnify" label="Search" single-line hide-details)
+          v-text-field(v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details)
     template(v-slot:item.actions="{ item }")
       v-icon(v-on:click="deleteProduct(item.id)") mdi-delete
   v-col(cols="2")
@@ -109,11 +109,6 @@ export default {
         this.snackbar.show = false;
       }, this.snackbar.timeout);
     },
-
-    updateFilteredProducts() {
-      // Call this method whenever the search input changes
-    },
   },
 };
 </script>
-  
