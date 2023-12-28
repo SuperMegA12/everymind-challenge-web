@@ -7,7 +7,7 @@ v-container
       v-col(cols="12" sm="6" md="4")
         v-text-field(v-model="description" label="Description" :rules="[v => !!v || 'Description is required']")
       v-col(cols="12" sm="6" md="4")
-        v-text-field(v-model="code" label="Code" type="number" :rules="[v => !!v || 'Code is required']" outlined inputmode="numeric")
+        v-text-field(v-model="code" label="Code" type="number" hint="Code must be unique" :rules="[v => !!v || 'Code is required and must be unique']" outlined inputmode="numeric")
       v-col(cols="12" sm="6" md="4")
         v-text-field(v-model="price" label="Price" type="number" :rules="[v => !!v || 'Price is required']" outlined inputmode="numeric")
       v-col
@@ -51,7 +51,7 @@ export default {
           console.log(response.data);
         })
         .catch(error => {
-          this.showSnackbar('Error creating product', 'error');
+          this.showSnackbar('Error creating product ' + error, 'error');
           this.cleanFields();
           console.error('Error creating product:', error);
         });

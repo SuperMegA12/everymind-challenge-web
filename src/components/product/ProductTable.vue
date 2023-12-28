@@ -11,7 +11,8 @@ v-container
     v-btn(color="primary" @click="openCreateProductModal") Create Product
 
   v-dialog(v-model="isCreateProductModalOpen")
-    create-product-form(@product-created="fetchProducts")
+    v-card
+      create-product-form(@product-created="fetchProducts")
 
   v-snackbar(v-model="snackbar.show" :color="snackbar.color" :timeout="snackbar.timeout" bottom)
     span {{ snackbar.text }}
