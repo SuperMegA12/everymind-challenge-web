@@ -57,13 +57,13 @@ export default {
         .then(response => {
           this.showSnackbar('Product updated successfully', 'primary');
           this.$emit('product-updated');
-          this.cleanFields();
           console.log(response.data);
+          this.reloadPageAfterUpdate()
         })
         .catch(error => {
           this.showSnackbar('Error updating product ' + error, 'error');
-          this.cleanFields();
           console.error('Error updating product:', error);
+          this.reloadPageAfterUpdate()
         });
     },
 
@@ -71,12 +71,10 @@ export default {
       this.$emit('show-snackbar', text, color);
     },
 
-    cleanFields() {
-      this.updatedName = '';
-      this.updatedDescription = '';
-      this.updatedCode = '';
-      this.updatedPrice = null;
-      this.valid = false;
+    reloadPageAfterUpdate() {
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
     },
   },
 };

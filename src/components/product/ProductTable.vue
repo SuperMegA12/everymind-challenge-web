@@ -7,12 +7,23 @@ v-container
           v-text-field(v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details)
     template(v-slot:item.actions="{ item }")
       v-icon(v-on:click="deleteProduct(item.id)") mdi-delete
+      v-icon(v-on:click="openUpdateProductModal(item.id, item.name, item.description, item.code, item.price)") mdi-pencil
   v-col(cols="2")
     v-btn(color="primary" @click="openCreateProductModal") Create Product
 
   v-dialog(v-model="isCreateProductModalOpen")
     v-card
       create-product-form(@product-created="fetchProducts")
+  v-dialog(v-model="isUpdateProductModalOpen")
+    v-card
+      update-product-form(
+        :product-id="updatingProductId"
+        :existing-name="updatingProductName"
+        :existing-description="updatingProductDescription"
+        :existing-code="updatingProductCode"
+        :existing-price="updatingProductPrice"
+        @product-updated="fetchProducts"
+      )
 
   v-snackbar(v-model="snackbar.show" :color="snackbar.color" :timeout="snackbar.timeout" bottom)
     span {{ snackbar.text }}
@@ -20,17 +31,26 @@ v-container
 
 <script>
 import CreateProductForm from './CreateProductForm';
+import UpdateProductForm from './UpdateProductForm';
+
 import axios from 'axios';
 
 export default {
   components: {
-    CreateProductForm
+    CreateProductForm,
+    UpdateProductForm
   },
 
   data: () => ({
     products: [],
     search: '',
     isCreateProductModalOpen: false,
+    isUpdateProductModalOpen: false,
+    updatingProductId: null,
+    updatingProductName: '',
+    updatingProductDescription: '',
+    updatingProductCode: null,
+    updatingProductPrice: null,
     snackbar: {
       show: false,
       text: '',
@@ -74,6 +94,7 @@ export default {
         });
 
       this.closeCreateProductModal();
+      this.closeUpdateProductModal();
     },
 
     deleteProduct(productId) {
@@ -96,8 +117,21 @@ export default {
       this.isCreateProductModalOpen = true;
     },
 
+    openUpdateProductModal(productId, name, description, code, price) {
+      this.updatingProductId = productId;
+      this.updatingProductName = name;
+      this.updatingProductDescription = description;
+      this.updatingProductCode = code;
+      this.updatingProductPrice = price;
+      this.isUpdateProductModalOpen = true;
+    },
+
     closeCreateProductModal() {
       this.isCreateProductModalOpen = false;
+    },
+
+    closeUpdateProductModal() {
+      this.isUpdateProductModalOpen = false;
     },
 
     showSnackbar(text, color) {
