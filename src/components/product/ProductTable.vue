@@ -1,10 +1,10 @@
 <template lang="pug">
 v-container
-  v-data-table(:headers="headers" :items="products" :search="search")
+  v-data-table(:headers="headers" :items="filteredProducts" :search="search")
     template(v-slot:top)
       v-row
         v-col
-          v-text-field(v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details)
+          v-text-field(v-model="search" @input="updateFilteredProducts" append-icon="mdi-magnify" label="Search" single-line hide-details)
     template(v-slot:item.actions="{ item }")
       v-icon(v-on:click="deleteProduct(item.id)") mdi-delete
   v-col(cols="2")
@@ -19,11 +19,10 @@ v-container
 </template>
 
 <script>
-import CreateProductForm from './CreateProductForm'
+import CreateProductForm from './CreateProductForm';
 import axios from 'axios';
 
 export default {
-
   components: {
     CreateProductForm
   },
@@ -48,6 +47,17 @@ export default {
     ],
   }),
 
+  computed: {
+    filteredProducts() {
+      return this.products.filter(product =>
+        product.name.toLowerCase().includes(this.search.toLowerCase()) ||
+        product.description.toLowerCase().includes(this.search.toLowerCase()) ||
+        String(product.code).includes(this.search) ||
+        String(product.price).includes(this.search)
+      );
+    },
+  },
+
   mounted() {
     this.fetchProducts();
   },
@@ -59,7 +69,7 @@ export default {
           this.products = response.data;
         })
         .catch(error => {
-          this.showSnackbar('Error fetching products ' + error, 'error')
+          this.showSnackbar('Error fetching products ' + error, 'error');
           console.error('Error fetching products:', error);
         });
 
@@ -99,6 +109,11 @@ export default {
         this.snackbar.show = false;
       }, this.snackbar.timeout);
     },
+
+    updateFilteredProducts() {
+      // Call this method whenever the search input changes
+    },
   },
 };
 </script>
+  
