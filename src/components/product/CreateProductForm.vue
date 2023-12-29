@@ -47,12 +47,12 @@ export default {
         .then(response => {
           this.showSnackbar('Product created successfully', 'primary');
           this.$emit('product-created');
-          this.cleanFields();
+          this.reloadPageAfterCreate()
           console.log(response.data);
         })
         .catch(error => {
           this.showSnackbar('Error creating product ' + error, 'error');
-          this.cleanFields();
+          this.reloadPageAfterCreate()
           console.error('Error creating product:', error);
         });
     },
@@ -67,12 +67,10 @@ export default {
       }, this.snackbar.timeout);
     },
 
-    cleanFields() {
-      this.name = '';
-      this.description = '';
-      this.code = '';
-      this.price = null;
-      this.valid = false;
+    reloadPageAfterCreate() {
+      setTimeout(() => {
+        location.reload();
+      }, 500);
     },
   },
 };
