@@ -74,7 +74,7 @@ export default {
     reloadPageAfterUpdate() {
       setTimeout(() => {
         location.reload();
-      }, 1000);
+      }, 500);
     },
   },
 };
